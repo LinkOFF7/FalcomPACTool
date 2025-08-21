@@ -1,11 +1,11 @@
-﻿using System.Text;
+using System.Text;
 
 namespace FalcomPACTool.Archive
 {
     internal class FPACHeader : IDisposable
     {
         private Stream _stream;
-        public uint MagicNumber { get; private set; }
+        public uint MagicNumber { get; private set; } // FPAC
         public uint FileCount { get; private set; }
         public uint DataStartOffset { get; private set; }
         private int Field0C { get; set; } // 1
@@ -18,6 +18,8 @@ namespace FalcomPACTool.Archive
             if (_stream is not null)
             {
                 MagicNumber = _stream.ReadU32();
+                if (MagicNumber != 0x43415046) 
+                    throw new Exception("Unknown magic. FPAC was expected.");
                 FileCount = _stream.ReadU32();
                 DataStartOffset = _stream.ReadU32();
                 Field0C = _stream.ReadS32();
